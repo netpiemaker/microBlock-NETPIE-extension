@@ -366,9 +366,12 @@ class Microgear:
                 value = out;
                 out = {}
             return value;
-
+        
         payload = ujson.dumps({'data': covertDotNotationToJSON(field, value)})
-        self.mqttclient.publish('@shadow/data/update', payload)
+        if self.mqttclient.mqtt_state == MQTT_STATE_CONNECTED:
+            self.mqttclient.publish('@shadow/data/update', payload)
+        else:
+            self.connect()
 
     def topicMatched(self, sub, topic):
         s = 0
