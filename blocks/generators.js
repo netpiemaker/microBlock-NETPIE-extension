@@ -25,6 +25,29 @@ function objectDotToJSON(path, val) {
   return value;
 }
 
+function globalVariableDeclaration() {
+    let globals = [];
+    let varName;
+    let workspace = block.workspace;
+    let variables = Blockly.Variables.allUsedVarModels(workspace) || [];
+    for (let i = 0, variable; variable = variables[i]; i++) {
+      varName = variable.name;
+      if (block.getVars().indexOf(varName) == -1) {
+        globals.push(Blockly.Python.variableDB_.getName(varName,
+            Blockly.VARIABLE_CATEGORY_NAME));
+      }
+    }
+    // Add developer variables.
+    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
+    for (let i = 0; i < devVarList.length; i++) {
+      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
+          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
+    }
+    globals = globals.length ?
+        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
+    return globals;
+}
+
 Blockly.Python['netpie_connect'] = function(block) {
     Blockly.Python.definitions_['microgear'] = 'from microgear import Microgear\nimport time\n';
     let device_id = Blockly.Python.valueToCode(block, 'device_id', Blockly.Python.ORDER_ATOMIC) || '';
@@ -50,34 +73,11 @@ Blockly.Python['netpie_publish'] = function(block) {
 
 Blockly.Python['netpie_on_connected'] = function(block) {
   let statements_callback = Blockly.Python.statementToCode(block, 'callback') + '  pass';
-  
-  // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
-  
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -----------------------------
-  
+    
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_connected_'+(cb_netpie_on_connected_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '():',
-     globals,
+    globalVariableDeclaration(),
     statements_callback]);
 
   let code = `microgear.on('Connected', ${functionName})\n`;
@@ -85,35 +85,11 @@ Blockly.Python['netpie_on_connected'] = function(block) {
 };
 
 Blockly.Python['netpie_on_disconnected'] = function(block) {
-  let statements_callback = Blockly.Python.statementToCode(block, 'callback') + '  pass';
-
-  // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
-  
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -----------------------------
-  
+  let statements_callback = Blockly.Python.statementToCode(block, 'callback') + '  pass';  
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_disconnected_'+(cb_netpie_on_disconnected_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '():',
-     globals,
+    globalVariableDeclaration(),
     statements_callback]);
 
   let code = `microgear.on('Disconnected', ${functionName})\n`;
@@ -132,34 +108,11 @@ Blockly.Python['netpie_on_reveived_msg'] = function(block) {
   let subtopic = block.getFieldValue('topic');
   let topic = `'@msg/${subtopic}'`;
   let statements_callback = Blockly.Python.statementToCode(block, 'callback') + '  pass';
-
-  // -----------------------------
-    var globals = [];
-    var varName;
-    var workspace = block.workspace;
-    var variables = Blockly.Variables.allUsedVarModels(workspace) || [];
-    for (var i = 0, variable; variable = variables[i]; i++) {
-      varName = variable.name;
-      if (block.getVars().indexOf(varName) == -1) {
-        globals.push(Blockly.Python.variableDB_.getName(varName,
-            Blockly.VARIABLE_CATEGORY_NAME));
-      }
-    }
-    // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-    for (var i = 0; i < devVarList.length; i++) {
-      globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
-          Blockly.Names.DEVELOPER_VARIABLE_TYPE));
-    }
-  
-    globals = globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    // -----------------------------
   
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_reveived_msg_'+(cb_netpie_on_reveived_msg_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(topic, payload):',
-     globals,
+    globalVariableDeclaration(),
     statements_callback]);
 
   let code = `microgear.on(${topic}, ${functionName})\n`;
