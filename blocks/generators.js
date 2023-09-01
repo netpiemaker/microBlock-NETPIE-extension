@@ -38,14 +38,13 @@ function globalVariableDeclaration() {
       }
     }
     // Add developer variables.
-    var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
+    let devVarList = Blockly.Variables.allDeveloperVariables(workspace);
     for (let i = 0; i < devVarList.length; i++) {
       globals.push(Blockly.Python.variableDB_.getName(devVarList[i],
           Blockly.Names.DEVELOPER_VARIABLE_TYPE));
     }
-    globals = globals.length ?
+    return globals.length ?
         Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
-    return globals;
 }
 
 Blockly.Python['netpie_connect'] = function(block) {
