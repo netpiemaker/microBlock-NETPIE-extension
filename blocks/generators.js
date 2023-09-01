@@ -44,7 +44,7 @@ function globalVariableDeclaration(block) {
           Blockly.Names.DEVELOPER_VARIABLE_TYPE));
     }
     return globals.length ?
-        Blockly.Python.INDENT + 'global ' + globals.join(', ') + '\n' : '';
+        Blockly.Python.INDENT + 'global ' + globals.join(', ') : '';
 }
 
 Blockly.Python['netpie_connect'] = function(block) {
