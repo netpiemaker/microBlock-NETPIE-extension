@@ -25,7 +25,7 @@ function objectDotToJSON(path, val) {
   return value;
 }
 
-function globalVariableDeclaration() {
+function globalVariableDeclaration(block) {
     let globals = [];
     let varName;
     let workspace = block.workspace;
@@ -76,7 +76,7 @@ Blockly.Python['netpie_on_connected'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_connected_'+(cb_netpie_on_connected_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '():',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.on('Connected', ${functionName})\n`;
@@ -88,7 +88,7 @@ Blockly.Python['netpie_on_disconnected'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_disconnected_'+(cb_netpie_on_disconnected_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '():',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.on('Disconnected', ${functionName})\n`;
@@ -111,7 +111,7 @@ Blockly.Python['netpie_on_reveived_msg'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_reveived_msg_'+(cb_netpie_on_reveived_msg_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(topic, payload):',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.on(${topic}, ${functionName})\n`;
@@ -155,7 +155,7 @@ Blockly.Python['netpie_read_shadow'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_read_shadow_'+(cb_netpie_read_shadow_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(shadow):',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.getShadowData(${functionName})\n`;
@@ -168,7 +168,7 @@ Blockly.Python['netpie_on_shadow_updated'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_shadow_updated_'+(cb_netpie_on_shadow_updated_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(shadow):',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.on('ShadowUpdated', ${functionName})\n`;
@@ -205,7 +205,7 @@ Blockly.Python['netpie_on_reveived_private_msg'] = function(block) {
   let functionName = Blockly.Python.provideFunction_(
     'cb_netpie_on_reveived_msg_'+(cb_netpie_on_reveived_msg_count++),
     ['def ' + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + '(topic, payload):',
-    globalVariableDeclaration(),
+    globalVariableDeclaration(block),
     statements_callback]);
 
   let code = `microgear.on(${topic}, ${functionName})\n`;
